@@ -5,6 +5,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.Projections;
 import com.mongodb.client.model.Sorts;
 import com.mongodb.util.JSON;
 
@@ -36,9 +37,14 @@ public class Homework2_3 {
         MongoDatabase database = client.getDatabase("students");
         final MongoCollection<Document> collection = database.getCollection("grades");
         Bson sort = Sorts.orderBy(Sorts.ascending("student_id"),Sorts.ascending("score"));
-        List<Document> cur = collection.find(new Document("type","homework")).sort(sort).into(new ArrayList<Document>());
+        //Bson projection = Projections.fields(include("student_id"));
+        List<Document> cur = collection.find(new Document("type","homework")).
+        		sort(sort)
+        		.projection(new Document("student_id",1).append("_id",1))
+        		.into(new ArrayList<Document>());
         for(Document all:cur){
-        	System.out.println(JSON.serialize(all));
+        	System.out.println(JSON.serialize(all.get("_id")));
+        	
         }
         
         
