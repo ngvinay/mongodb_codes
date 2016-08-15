@@ -33,7 +33,7 @@ public class Homework2_3 {
 	public static void main(String[] args) {
 		
 		MongoClient client = new MongoClient();
-		String prev_id;
+		String prev_id="";
         MongoDatabase database = client.getDatabase("students");
         final MongoCollection<Document> collection = database.getCollection("grades");
         Bson sort = Sorts.orderBy(Sorts.ascending("student_id"),Sorts.ascending("score"));
@@ -43,18 +43,14 @@ public class Homework2_3 {
         		.projection(new Document("student_id",1).append("_id",1))
         		.into(new ArrayList<Document>());
         for(Document all:cur){
-        	if(all.getString("student_id") != prev_id)){
-        		
+        	if(all.getString("student_id") != prev_id){
+        		System.out.println(JSON.serialize(all.get("_id")));
         	}
-        	System.out.println(JSON.serialize(all.get("_id")));
-        	
+        	    	
         }
-        
-        
+            
         
         //collection.deleteMany(eq("type","homework"));      
-		
-
-	}
+			}
 
 }
