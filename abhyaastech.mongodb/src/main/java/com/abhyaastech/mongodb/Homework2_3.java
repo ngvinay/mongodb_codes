@@ -2,12 +2,17 @@ package com.abhyaastech.mongodb;
 import com.mongodb.MongoClient;
 //import com.mongodb.ServerAddress;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.Sorts;
+import com.mongodb.util.JSON;
 
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import org.bson.Document;
+import org.bson.conversions.Bson;
+
 import spark.Request;
 import spark.Response;
 import spark.Route;
@@ -30,7 +35,15 @@ public class Homework2_3 {
 
         MongoDatabase database = client.getDatabase("students");
         final MongoCollection<Document> collection = database.getCollection("grades");
-        collection.deleteMany(eq("type","homework"));      
+        Bson sort = Sorts.orderBy(Sorts.ascending("student_id"),Sorts.ascending("score"));
+        List<Document> cur = collection.find(new Document("type","homework")).sort(sort).into(new ArrayList<Document>());
+        for(Document all:cur){
+        	System.out.println(JSON.serialize(all));
+        }
+        
+        
+        
+        //collection.deleteMany(eq("type","homework"));      
 		
 
 	}
